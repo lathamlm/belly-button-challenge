@@ -1,32 +1,27 @@
-// URL TO JSON
 const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
 
-// d3 TO READ IN/CONSOLE LOG JSON
 const dataPromise = d3.json(url);
 console.log("Data Promise: ", dataPromise);
 
+d3.json(url).then(function(data) {
+    console.log("All Data: ", data);
+});
+age = []
 
-// PULL DATA
+
 d3.json(url).then(function(data){
-    
-    // LIST OF NAMES TO GO INTO DROPDOWN
-    let namesList = data.names
-    // need to figure out how to get this into dropdown
-    
-    // ADD IN HERE DROPDONW CLICK INFORMATION
+    idNums = data.names;
 
-
-    // DEMOGRAPHIC INFORMATION
-    // REFERENCED HTMLCHEATSHEET.COM/JS/
+    metaData = data.metadata;
+    // REFERENCED W3SCHOOLS.COM/JS/JS_LOOP_FOR.ASP
     for(let i=0, l=data.metadata.length; i<l; i++) {
-        if (data.metadata[i].id == this) {
-
-        }
+        age.push(data.metadata[i].id);
+        
     }
- 
+    console.log("Loop: ", age)
     sampleData = data.samples;
 
-    console.log("Test: ", data.metadata[0].id);
+    console.log("Test: ", metaData[0].id);
     console.log("names: ", data.names);
 
     /*let trace1 = {
@@ -41,7 +36,7 @@ d3.json(url).then(function(data){
      Plotly.newPlot("plot", trace1)*/
 })
 
-
+console.log("Loop test: ", age)
 /* d3.selectAll("#selDataset").on("change", updatePlotly),
 // what to do when the dropdown menu is selected
 function updatePlotly() {
