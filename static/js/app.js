@@ -12,29 +12,46 @@ d3.json(url).then(function(data){
     // LIST OF NAMES TO GO INTO DROPDOWN
     let namesList = data.names
     // need to figure out how to get this into dropdown
+    // maybe for loop to review list and if element not in it, add it?
     
     // ADD IN HERE DROPDONW CLICK INFORMATION
 
     console.log("names: ", data.names)
 
-    // REFERENCED HTMLCHEATSHEET.COM/JS/
-    for(let i=0, l=data.metadata.length; i<l; i++) {
-        if (data.metadata[i].id == 941) {
-            console.log("metadata: ", data.metadata[i])
+    // CHOSENID TO BE 'THIS' ON CHANGE
+    let chosenId = 940
 
+    // REFERENCED HTMLCHEATSHEET.COM/JS/ FOR FORMATTING
+    for(let i=0, l=data.metadata.length; i<l; i++) {
+        if (data.metadata[i].id == chosenId) {
+            console.log("metadata keys: ", Object.keys(data.metadata[i]))
+            console.log("metadata values: ", Object.values(data.metadata[i]))
             //------------------------
             // DEMOGRAPHIC INFORMATION HERE
-            // d3.select("#sample-metadata").text()
+            let demoKeys = Object.keys(data.metadata[i])
+            let demoValues = Object.values(data.metadata[i])
+            
+            for(let j=0, len=demoKeys.length; j<len; j++) {
+                console.log(demoKeys[j], ": ", demoValues[j])
+                // ADDED <UL> TO HTML TO APPEND to list
+                d3.select("ul").append("li").text(demoKeys[j] + ": " + demoValues[j])
+            }
 
             console.log("samples: ", data.samples[i])
 
             //------------------------
             // HORIZONTAL BAR GRAPH - [i] WILL BE THE SAME ACROSS ELEMENTS
+
+            // FORMATTING FOR Y VALUE, STRING TO ADD OTU
+            let valueTest = data.samples[i].otu_ids.slice(0, 10).reverse()
+            let stringValue = valueTest.map(item => "OTU" + " " + String(item))
             
+            // TRACE 1 FOR BAR GRAPH
+            // REFERENCED https://plotly.com/javascript/horizontal-bar-charts/
             let trace1 = {
                 x: data.samples[i].sample_values.slice(0, 10).reverse(),
-                y: String(data.samples[i].otu_ids.slice(0, 10).reverse()),
-                label: data.samples[i].otu_labels.slice(0, 10).reverse(),
+                y: stringValue,
+                text: data.samples[i].otu_labels.slice(0, 10).reverse(),
                 type: 'bar',
                 orientation: 'h'
             };
@@ -42,13 +59,16 @@ d3.json(url).then(function(data){
             let data1 = [trace1];
 
             let layout1 = {
-                title: `Top 10 OTUs for ID No. 943` //${chosenId}
+                title: `Top 10 OTUs for ID No. ${chosenId}`, //${chosenId}
+                height: 600,
+                width: 500
             };
 
             Plotly.newPlot("bar", data1, layout1);
 
             //---------------------
-            //BUBBLE CHART, SAME DATA AS 'chosenData'
+            //BUBBLE CHART, SAME DATA AS BAR GRAPH
+            // REFERENCED https://plotly.com/javascript/bubble-charts/
             let trace2 = {
                 x: data.samples[i].otu_ids,
                 y: data.samples[i].sample_values,
@@ -63,14 +83,51 @@ d3.json(url).then(function(data){
             let data2 = [trace2];
 
             let layout2 = {
-                title: 'Fingers Crossed',
+                title: `OTU Volume for ID No. ${chosenId}`,
                 showlegend: false,
                 height: 500,
-                width: 1000
+                width: 1100
             };
 
             Plotly.newPlot('bubble', data2, layout2)
 
+            // GAUGE CHART
+            // REFERENCED https://plotly.com/javascript/gauge-charts/
+            let data3 = [
+                {
+                    domain: {x: [0,1], y: [0,1]},
+                    value: data.metadata[i].wfreq,
+                    title: { text: "Belly Button Washing Frequency"},
+                    gauge: {
+                        axis: {visible: false, range: [0,9]},
+                        bar: {color: "#003366"},
+                        steps: [
+                            {range: [0,1], color: "#f7f5f0"},  //COLOR HEX
+                            {range: [1,2], color: "#f2f1e9"},
+                            {range: [2,3], color: "#f0ece2"},
+                            {range: [3,4], color: "#e8e3d3"},
+                            {range: [4,5], color: "#c9e1bf"},
+                            {range: [5,6], color: "#b3d5a4"},
+                            {range: [6,7], color: "#9dc98a"},
+                            {range: [7,8], color: "#93c47d"},
+                            {range: [8,9], color: "#84b070"},
+                        ]
+                    },
+                    type: "indicator",
+                    mode: "gauge+number"
+                }
+            ];
+
+            let layout3 = {
+                height: 500,
+                width: 500,
+                margin: {
+                    t: 3,
+                    b: 3
+                }
+            };
+
+            Plotly.newPlot("gauge", data3, layout3)
         }
     }
 

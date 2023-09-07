@@ -85,3 +85,25 @@ Plotly.newPlot("plot", trace1)*/
             Plotly.newPlot("plot", data, layout);
         }
     }*/
+//-------------------------------------------------------
+    
+// HORIZONTAL BAR CHART FORMATTING
+
+    /*let sampleValues = data.samples[i].sample_values.slice(0,10);
+    let otuIds = data.samples[i].otu_ids.slice(0, 10);
+    let otuLabels = data.samples[i].otu_ids.slice(0, 10);
+
+    let trace1 = {
+        x: data.map(subject => subject.sampleValues),
+        y: data.map(subject => subject.personotuIds),
+        label: data.map(subject => subject.otuLabels),
+        type: 'bar',
+        orientation: 'h'
+     };
+     
+     let data = [trace1];
+
+     let layout = {
+        title: `Top 10 OTUs for ID No. ${chosenId}`
+     };
+     Plotly.newPlot("plot", data, layout);*/
