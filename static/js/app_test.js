@@ -62,3 +62,26 @@ function updatePlotly() {
 
 data = [trace1]
 Plotly.newPlot("plot", trace1)*/
+// ------------------------------------------------------------
+/*if (data.samples[i].id == 943) {
+            //console.log(data.samples[i]);
+
+            let chosenData = data.samples[i]
+            
+            let trace1 = {
+                x: chosenData.map(subject => subject.sample_values.slice(0,10)),
+                y: chosenData.map(subject => subject.otu_ids.slice(0, 10)),
+                label: chosenData.map(subject => subject.otu_ids.slice(0, 10)),
+                type: 'bar',
+                orientation: 'h'
+            };
+     
+            let data = [trace1];
+
+            let layout = {
+                title: `Top 10 OTUs for ID No. 943` //${chosenId}
+            };
+
+            Plotly.newPlot("plot", data, layout);
+        }
+    }*/
