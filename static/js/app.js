@@ -10,20 +10,17 @@ console.log("Data Promise: ", dataPromise);
 d3.json(url).then(function(data){
     
     // LIST OF NAMES TO GO INTO DROPDOWN
-    /*for(let x=0, len=data.names.length; x<len; x++) {
+    for(let x=0, len=data.names.length; x<len; x++) {
         let namesList = data.names
-    }*/
-    // need to figure out how to get this into dropdown
-    // maybe for loop to review list and if element not in it, add it?
-    
-    // ADD IN HERE DROPDONW CLICK INFORMATION
-
+        // LINE 16 REFERENCED TUTORING SESSION (JESSE WRIGHT)
+        d3.select("#selDataset").append("option").text(namesList[x]).property("value", namesList[x])
+    }
 
     console.log("names: ", data.names)
 
     /* -----------------------------------------------------------------------
     ------------------------------------------------------------------------*/
-
+    // FUNCTION FOR INITIAL STATIC MAP
     function init() {
         // DEMOGRAPHIC INFO
         let demoKeys = Object.keys(data.metadata[0])
@@ -120,40 +117,38 @@ d3.json(url).then(function(data){
 
         Plotly.newPlot("gauge", data3, layout3);
     };
-    /*--------------------------------------------------------------------
-    --------------------------------------------------------------------*/
-    
 
-    //d3.selectAll("#selDataSet").on("click", updatePlotly);
+    // INITIALIZING THE FIRST FUNCTION TO HAVE DATA PRE-FILLED
+    init();
+})
 
-    // REFERENCED HTMLCHEATSHEET.COM/JS/ FOR FORMATTING
-    /*function updatePlotly() {
-        let dropdownMenu = d3.select("#selDataset");
-        let dataset = dropdownMenu.property("value");
+// optionChanged FUNCTION MOVED OUTSIDE OF ORIGINAL d3 SO IT CAN BE READ -- REFERENCED TUTORING SESSION (JESSE WRIGHT)
+d3.selectAll("#selDataSet").on("change", optionChanged);
 
-        let x = [];
-        let y = [];
+// REFERENCED HTMLCHEATSHEET.COM/JS/ FOR FORMATTING
+function optionChanged(chosenId) {
 
-        if(dataset == this) {
-            x = data.samples[this].otu_ids,
-            y = data.samples[0].sample_values;
-        }*/
-
-        // CHOSENID TO BE 'THIS' ON CHANGE
-        let chosenId = this;
+    d3.json(url).then(function(data){
+        console.log("id: ", chosenId)
+        
+        //FOR LOOP TO IDENTIFY CORRECT ID AND MATCH TO GRAPH DATA
         for(let i=0, l=data.metadata.length; i<l; i++) {
             if (data.metadata[i].id == chosenId) {
                 console.log("metadata keys: ", Object.keys(data.metadata[i]))
                 console.log("metadata values: ", Object.values(data.metadata[i]))
                 //------------------------
                 // DEMOGRAPHIC INFORMATION HERE
-                let demoKeys = Object.keys(data.metadata[i])
-                let demoValues = Object.values(data.metadata[i])
-                
-                for(let j=0, len=demoKeys.length; j<len; j++) {
-                    console.log(demoKeys[j], ": ", demoValues[j])
+                let demoKeys1 = Object.keys(data.metadata[i])
+                let demoValues1 = Object.values(data.metadata[i])
+
+                // CLEARS UL FOR NEW DEMOGRAPHIC
+                // REFERENCED TUTORING SESSION - JESSE WRIGHT
+                d3.select('ul').html("")
+
+                for(let j=0, len=demoKeys1.length; j<len; j++) {
+                    console.log(demoKeys1[j], ": ", demoValues1[j])
                     // ADDED <UL> TO HTML TO APPEND to list
-                    d3.select("ul").append("li").text(demoKeys[j] + ": " + demoValues[j])
+                    d3.select("ul").append("li").text(demoKeys1[j] + ": " + demoValues1[j])
                 }
 
                 console.log("samples: ", data.samples[i])
@@ -164,9 +159,6 @@ d3.json(url).then(function(data){
                 // FORMATTING FOR Y VALUE, STRING TO ADD OTU
                 let valueTest = data.samples[i].otu_ids.slice(0, 10).reverse()
                 let stringValue = valueTest.map(item => "OTU" + " " + String(item))
-                
-                let x = [];
-                let y = [];
 
                 // TRACE 1 FOR BAR GRAPH
                 // REFERENCED https://plotly.com/javascript/horizontal-bar-charts/
@@ -251,27 +243,9 @@ d3.json(url).then(function(data){
                 };
 
                 Plotly.newPlot("gauge", data3, layout3);
-                // -------------------------------------------------------------------
             }
         }
-
-
-    // INITIALIZING THE FIRST FUNCTION TO HAVE DATA PRE-FILLED
-    init();
-})
-// -----------------------------------------------------
-
-/* d3.selectAll("#selDataset").on("change", updatePlotly),
-// what to do when the dropdown menu is selected
-function updatePlotly() {
-    let dropdownMenu = d3.select("#selDataset");
-    let name = dropdownMenu.property("onchange");
-
-    let x = [];
-    let y = [];
-
-    if (name === this) {
-        x = [];
-        y = [];
     }
-} */
+)};
+
+
